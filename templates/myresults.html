@@ -1,0 +1,69 @@
+{% extends 'newbase.html' %}
+{% load widget_tweaks %}
+{% block stylesheet %}
+<style>
+    .close{
+        color: rgba(255,255,0,0.9);
+    }
+    .modal-dialog{
+        height: 150px;
+    }
+</style>
+{% endblock %}
+{% block breadcrumb %}
+My Results
+{% endblock %}
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Results</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in results %}
+        {% if r.patient == user.patient or r.uploaded_by == user.doctor%}
+        <tr>
+            <td>{{ r.patient.first_name }}</td>
+            <td>{{ r.date }}</td>
+            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Modal</button><br></td>
+            <td><a href="{% url 'display' r.pk %}" class="btn btn-secondary btn-sm" role="button">Show</a><br></td>
+            <td><a href="{% url 'download' r.pk %}" class="btn btn-secondary btn-sm" role="button" download="download.dcm">Download</a><br></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+<input type="text" id="aaa" class="ccc"><br>
+<input type="text" id="bbb" class="cccc"><br>
+<span id="id">0</span>
+
+<!-- Modal -->
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img src="{{ r.image.url }}" width="300px", height="100%">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script>
+    i=0;
+    $(".ccc").on("keypress",function(){
+        $("#id").text(i+=1);
+    });
+</script>
+{% endblock %}

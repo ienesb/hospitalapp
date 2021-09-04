@@ -1,0 +1,96 @@
+{% extends 'newbase.html' %}
+{% load tags %}
+
+{% block breadcrumb %}
+{% if user|has_attr:'doctor' %} 
+<li class="breadcrumb-item">Logged in as Doctor</li>
+{% else %}
+<li class="breadcrumb-item">Logged in as Patient</li>
+{% endif %}
+{% endblock %}
+{% block stylesheet %}
+<style>
+    /* Set the size of the div element that contains the map */
+#map {
+  height: 400px;
+  /* The height is 400 pixels */
+  width: 100%;
+  /* The width is the width of the web page */
+}
+</style>
+<script>
+    // Initialize and add the map
+    function initMap() {
+      // The location of Uluru
+      const uluru = { lat: -25.344, lng: 131.036 };
+      // The map, centered at Uluru
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 4,
+        center: uluru,
+      });
+      // The marker, positioned at Uluru
+      const marker = new google.maps.Marker({
+        position: uluru,
+        map: map,
+      });
+    }
+  </script>
+{% endblock %}
+{% block content %}
+
+<!-- <li><a href="#">Vaccinations</a></li><br>
+<li><a href="{% url 'records' %}">Records</a></li><br>
+<li><a href="{% url 'appointments' %}">Appointments</a></li><br>
+{% if user|has_attr:'patient' %} 
+<li><a href="{% url 'newappointment' %}">New Appointment</a></li><br>
+{% else %}
+<li><a href="{% url 'upload' %}">Upload Result</a></li><br>
+{% endif %}
+<li><a href="{% url 'myresults' %}">Results</a></li> -->
+<div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Appointments</h4>
+          <!-- <p class="category">Category subtitle</p> -->
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Doctor</th>
+                        <th>Active?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in appointments %}
+                    <tr>
+                        <td>{{ a.patient }}</td>
+                        <td>{{ a.date }}</td>
+                        <td>{{ a.doctor.get_name }}</td>
+                        <td>{{ a.is_active }}</td>
+                    </tr> 
+                    {% endfor %}
+                          
+                </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+</div>
+<div id="map"></div>
+<script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC80r8PBUjpwm1QDSlLSYv9NRmOQtt4M70&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>
+
+
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC80r8PBUjpwm1QDSlLSYv9NRmOQtt4M70&callback=initMap"></script> -->
+
+{% endblock js %}

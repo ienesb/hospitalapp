@@ -1,0 +1,99 @@
+{% extends 'newbase.html' %}
+{% load widget_tweaks %}
+
+{% block breadcrumb %}
+Records
+{% endblock %}
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in records %}
+        {% if r.patient == user.patient %}
+        <tr>
+            <td><a href="#" class="patient" data-get-url="{% url 'get' r.pk %}">{{ r.patient.first_name }}</a></td>
+            <td>{{ r.date }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal -->
+<!-- <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Patient: <span id="span-patient">patient</span><br>
+                Doctor: <span id="span-doctor">patient</span><br>
+                Department: <span id="span-dep">patient</span><br>
+                Date: <span id="span-date">patient</span><br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modal-close-button" class="btn btn-secondary"
+                    data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script>
+    $(".patient").on("click", function (event) {
+        event.preventDefault();
+        $.get({
+            url: $(this).data("get-url"),
+            success: function (data) {
+                var parsed_data = JSON.parse(data)
+                $("#span-patient").text(parsed_data.patient_name)
+                $("#span-doctor").text(parsed_data.doctor_name)
+                $("#span-dep").text(parsed_data.dep)
+                $("#span-date").text(parsed_data.date)
+                $("#exampleModal").show()
+            }
+        });
+    });
+    $(".close").on("click", function (event) {
+        $("#exampleModal").hide()
+    });
+    $("#modal-close-button").on("click", function (event) {
+        $("#exampleModal").hide()
+    });
+</script>
+
+{% endblock js %}

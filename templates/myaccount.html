@@ -1,0 +1,55 @@
+{% extends 'newbase.html' %}
+{% load widget_tweaks %}
+
+{% block title %}My account{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">My account</li>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% for field in form %}
+  <div class="form-group">
+      {{ field.label_tag }}
+    {% if field.name == 'photo'  %}
+    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+  <div class="fileinput-new thumbnail img-raised">
+      <img src="{{ user.patient.photo.url }}" rel="nofollow" alt="...">
+  </div>
+  <div class="fileinput-preview fileinput-exists thumbnail img-raised"></div>
+  <div>
+      <span class="btn btn-raised btn-round btn-default btn-file">
+          <span class="fileinput-new">Select image</span>
+          <!-- <input type="file" name="..." /> -->
+          {% render_field field class="form-control" %}
+          {{ field.photo }}
+      </span>
+      <a href="#" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a>
+  </div>
+</div>
+  
+    {% else %}
+    {% render_field field class="form-control" %}
+    {% endif %}
+    
+  </div>
+{% endfor %}
+
+  <button type="submit" class="btn btn-success">Post</button>
+</form>
+<!-- <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+  <div class="fileinput-new thumbnail img-raised">
+      <img src="{{ user.patient.photo.url }}" rel="nofollow" alt="...">
+  </div>
+  <div class="fileinput-preview fileinput-exists thumbnail img-raised"></div>
+  <div>
+      <span class="btn btn-raised btn-round btn-default btn-file">
+          <span class="fileinput-new">Select image</span>
+          <input type="file" name="..." />
+      </span>
+      <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a>
+  </div>
+</div> -->
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'newbase.html' %}
+{% load widget_tweaks %}
+
+{% block breadcrumb %}
+My Profile
+{% endblock %}
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Results</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in results %}
+        {% if r.patient == user.patient or r.uploaded_by == user.doctor%}
+        <tr>
+            <td>{{ r.patient.first_name }}</td>
+            <td>{{ r.date }}</td>
+            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Modal</button><br></td>
+            <td><a href="{% url 'display' r.pk %}" class="btn btn-secondary btn-sm" role="button">Show</a><br></td>
+            <td><a href="{% url 'download' r.pk %}" class="btn btn-secondary btn-sm" role="button" download="download.dcm">Download</a><br></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+<input type="text" id="aaa" class="ccc"><br>
+<input type="text" id="bbb" class="cccc"><br>
+<span id="id">0</span>
+{% endblock %}
