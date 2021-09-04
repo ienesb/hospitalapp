@@ -90,14 +90,26 @@ New Appointment
   <script>
      
     $("#id_department").on("change", function (event) {
-        console.log($(this));
-        if($("#id_session").val() === ""){
-            console.log("assadsad");
+        var selected_dep = $("#id_department option:selected").text();
+        var myOpts = document.getElementById('id_doctor').options;
+        for (opt of myOpts){
+            if (opt.value != ""){
+                $.get({
+                    url: "/getdep/" + opt.value, 
+                    success: function (data){
+                        var parsed_data = JSON.parse(data);
+                        if (parsed_data.dep != selected_dep){
+                            $('#id_doctor').children('option[value='+parsed_data.pk+']').prop('disabled',true);
+                        }
+                        else{
+                            $('#id_doctor').children('option[value='+parsed_data.pk+']').prop('disabled',false);
+                        }
+                        
+                    }
+                });
+            }
         }
-        else{
-            console.log("afsdfs");
-        }
-       
+        $("#id_doctor").val(''); 
     });
   </script>
 {% endblock js %}

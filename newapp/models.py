@@ -21,12 +21,12 @@ class Patient(models.Model):
 
 class Doctor(models.Model):
     DEPARTMENTS = (
-        ('Cardiologist','Cardiologist'),
-        ('Dermatologists','Dermatologists'),
-        ('Emergency Medicine Specialists','Emergency Medicine Specialists'),
-        ('Allergists/Immunologists','Allergists/Immunologists'),
-        ('Anesthesiologists','Anesthesiologists'),
-        ('Colon and Rectal Surgeons','Colon and Rectal Surgeons'),
+        (1,'Cardiologist'),
+        (2,'Dermatologists'),
+        (3,'Emergency Medicine Specialists'),
+        (4,'Allergists/Immunologists'),
+        (5,'Anesthesiologists'),
+        (6,'Colon and Rectal Surgeons'),
         
     )
     

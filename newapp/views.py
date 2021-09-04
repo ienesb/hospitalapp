@@ -53,11 +53,15 @@ class Appointments(View):
 
 @method_decorator(login_required, name='dispatch')
 class NewAppointment(View):
-    def get(self, request):
+    def get(self, request, dep=0):
         if not hasattr(request.user,"patient"):
             raise Http404("an error")
-        form = NewAppointmentForm()
-        print(form.fields["doctor"])
+        if dep == 0:
+            form = NewAppointmentForm()
+        else:
+            department = Doctor.DEPARTMENTS[dep-1]
+            form = NewAppointmentForm(initial={"department":department})
+        # print(form.fields["doctor"])
         # doctors = models.Doctor.objects.all()
         # form = NewAppointmentForm()
         return render(request, "newappointment.html", {"form": form})
@@ -233,3 +237,7 @@ class MyAccount(View):
             return redirect("newhome")
         print("form is not valid")
         return redirect("myaccount")
+
+def getdep(request, pk):
+    j = json.dumps({"dep": Doctor.objects.get(pk=pk).department, "pk":pk})
+    return HttpResponse(j)

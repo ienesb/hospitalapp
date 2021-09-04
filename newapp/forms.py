@@ -4,7 +4,7 @@ from .models import *
 import datetime
 
 class NewAppointmentForm(forms.ModelForm):
-    department = forms.ChoiceField(choices = Doctor.DEPARTMENTS)
+    department = forms.ChoiceField(choices = Doctor.DEPARTMENTS, required=True)
     # date = forms.DateTimeField(
     #     input_formats=['%m/%d/%Y %H:%M %p'],
     #     widget=forms.DateTimeInput(attrs={
@@ -13,6 +13,9 @@ class NewAppointmentForm(forms.ModelForm):
     #     })
     # )
     
+    def __init__(self, *args, **kwargs):
+        super(NewAppointmentForm, self).__init__(*args, **kwargs)
+        self.fields['doctor'] = forms.ModelChoiceField(queryset=Doctor.objects.all(), widget=forms.Select(attrs={'a':'b'}))
    
     class Meta:
         model = Appointment
