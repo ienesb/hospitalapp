@@ -46,11 +46,11 @@ New Appointment
         {% if field.name == 'date'  %}
         
         <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-            {% render_field field class="form-control" %}
-            {{ field.date }}
-            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-            </div>
+            <!-- {% render_field field class="form-control" %} -->
+            <!-- {{ field.date }} -->
+            <input type="text" name ="date" class="form-control datetimepicker" required id="id_date"/>
+
+            
           </div>
         {% else %}
         {% render_field field class="form-control" %}
@@ -58,22 +58,32 @@ New Appointment
         
       </div>
     {% endfor %}
-      
+      <!-- <div class="form-group">
+        <label class="label-control">Datetime Picker</label>
+        <input type="text" name ="date" class="form-control datetimepicker" value="21/06/2018"/>
+    </div> -->
     <button type="submit" class="btn btn-success">Post</button>
 </form>
 {% endblock %}
 
 {% block js %}
 {{ block.super }}
-<!-- <script>
-    $(function () {
-        $("#datetimepicker1").datetimepicker();
-    });
-</script> -->
+
 <script>
-    $(function () {
-      $("#datetimepicker1").datetimepicker({});
-    });
+    $('.datetimepicker').datetimepicker({
+    format: "L",
+    icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+    }
+});
   </script>
   <script>
      

@@ -9,7 +9,7 @@ class NewAppointmentForm(forms.ModelForm):
     deps = tuple(deps)
     department = forms.ChoiceField(choices = deps, required=True)
     
-    date = forms.DateField(input_formats=['%d/%m/%Y'])
+    date = forms.DateField(input_formats=['%m/%d/%Y'])
     field_order = ["department", "doctor", "date", "session"]
    
     class Meta:
