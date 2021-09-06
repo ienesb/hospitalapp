@@ -10,27 +10,20 @@
 {% endblock %}
 {% block stylesheet %}
 <style>
-    /* Set the size of the div element that contains the map */
 #map {
   height: 400px;
-  /* The height is 400 pixels */
   width: 100%;
-  /* The width is the width of the web page */
 }
 </style>
 <script>
-    // Initialize and add the map
     function initMap() {
-      // The location of Uluru
-      const uluru = { lat: -25.344, lng: 131.036 };
-      // The map, centered at Uluru
+      const home = { lat: 39.981378, lng: 32.792353 };
       const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 4,
-        center: uluru,
+        zoom: 17,
+        center: home,
       });
-      // The marker, positioned at Uluru
       const marker = new google.maps.Marker({
-        position: uluru,
+        position: home,
         map: map,
       });
     }
@@ -38,21 +31,11 @@
 {% endblock %}
 {% block content %}
 
-<!-- <li><a href="#">Vaccinations</a></li><br>
-<li><a href="{% url 'records' %}">Records</a></li><br>
-<li><a href="{% url 'appointments' %}">Appointments</a></li><br>
-{% if user|has_attr:'patient' %} 
-<li><a href="{% url 'newappointment' %}">New Appointment</a></li><br>
-{% else %}
-<li><a href="{% url 'upload' %}">Upload Result</a></li><br>
-{% endif %}
-<li><a href="{% url 'myresults' %}">Results</a></li> -->
 <div class="row">
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
           <h4 class="card-title">Appointments</h4>
-          <!-- <p class="category">Category subtitle</p> -->
         </div>
         <div class="card-body">
             <table class="table">
@@ -79,18 +62,21 @@
         </div>
       </div>
     </div>
+    <div class="col-md-6">
+      <div class="card">
+          <div class="card-header">
+          </div>
+          <div class="card-body">
+            <div id="map"></div>
+            <script
+                  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC80r8PBUjpwm1QDSlLSYv9NRmOQtt4M70&callback=initMap&libraries=&v=weekly"
+                  async
+                ></script>
+          </div>
+      </div>
+    </div>
 </div>
-<div id="map"></div>
-<script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC80r8PBUjpwm1QDSlLSYv9NRmOQtt4M70&callback=initMap&libraries=&v=weekly"
-      async
-    ></script>
+
 
 
 {% endblock %}
-
-{% block js %}
-{{ block.super }}
-<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC80r8PBUjpwm1QDSlLSYv9NRmOQtt4M70&callback=initMap"></script> -->
-
-{% endblock js %}

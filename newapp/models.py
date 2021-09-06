@@ -66,14 +66,17 @@ class Appointment(models.Model):
     )
     
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    date = models.DateField(null=True)
+    date = models.DateField(null=False)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     session = models.TimeField(choices=SESSIONS, null=True)
 
     def is_active(self):
-        if self.date > timezone.now():
+        
+        if self.date > timezone.now().date():
             return "Active"
-
+        elif self.date == timezone.now().date():
+            if self.session > timezone.now().time():
+                return "Active"
         return "Not Active"
 
 class Record(models.Model):

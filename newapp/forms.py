@@ -4,22 +4,17 @@ from .models import *
 import datetime
 
 class NewAppointmentForm(forms.ModelForm):
-    department = forms.ChoiceField(choices = Doctor.DEPARTMENTS, required=True)
-    # date = forms.DateTimeField(
-    #     input_formats=['%m/%d/%Y %H:%M %p'],
-    #     widget=forms.DateTimeInput(attrs={
-    #         'class': 'form-control datetimepicker-input',
-    #         'data-target': '#datetimepicker1'
-    #     })
-    # )
+    deps = list(Doctor.DEPARTMENTS)
+    deps.insert(0,("--------","--------"))
+    deps = tuple(deps)
+    department = forms.ChoiceField(choices = deps, required=True)
     
-    def __init__(self, *args, **kwargs):
-        super(NewAppointmentForm, self).__init__(*args, **kwargs)
-        self.fields['doctor'] = forms.ModelChoiceField(queryset=Doctor.objects.all(), widget=forms.Select(attrs={'a':'b'}))
+    date = forms.DateField(input_formats=['%d/%m/%Y'])
+    field_order = ["department", "doctor", "date", "session"]
    
     class Meta:
         model = Appointment
-        fields = ["doctor", "date", "session"]
+        fields = ["doctor", "session"]
 
 class UploadForm(forms.ModelForm):
     class Meta:
@@ -41,7 +36,6 @@ class MyAccountForm(forms.ModelForm):
         self.fields['last_name'] = forms.CharField(initial=user.patient.last_name)
         self.fields['email'] = forms.EmailField(initial=user.email)
         self.fields['photo'] = forms.ImageField(allow_empty_file=True, required=False)
-
 
     class Meta:
         model = Patient

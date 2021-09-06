@@ -39,19 +39,7 @@ New Appointment
 {% block content %}
 <form method="post">
     {% csrf_token %}
-    <!-- <select class="form-select" aria-label=".form-select-sm example" name="doctor">
-        <option selected>Open this select menu</option>
-        {% for d in doctors %}
-        <option>{{ d.first_name }} {{ d.last_name }} {{ d.department }}</option>
-        {% endfor %}
-    </select><br><br><br>
-    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" name = "datetimepicker"/>
-        <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-        </div>
-    </div> -->
-
+    
     {% for field in form %}
       <div class="form-group">
           {{ field.label_tag }}
