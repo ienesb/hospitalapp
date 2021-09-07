@@ -115,7 +115,6 @@ GitHub.sublime-settings
 !.vscode/extensions.json 
 .history
 
-requirements.txt
 dump.json
 boards/
 db/
