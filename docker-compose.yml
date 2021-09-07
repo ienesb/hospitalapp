@@ -1,0 +1,21 @@
+version: "3.9"
+   
+services:
+  db:
+    image: mysql
+    volumes:
+      - ./db/mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "hospital_db"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      # MYSQL_USER: "djangouser"
+      # MYSQL_PASSWORD: "ismail123"
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - "db"
