@@ -1,0 +1,21 @@
+{% extends 'newbase.html' %}
+{% load widget_tweaks %}
+
+{% block breadcrumb %}
+My Results
+{% endblock %}
+
+{% block content %}
+
+
+{% for patient in patients %}
+<div class="card">
+    <div class="card-body">
+        <img src="{{ patient.photo.url }}" alt=""> <br>  
+        Name: {{ patient.first_name }} <br>
+        Last Name: {{ patient.first_name }} <br>
+        Department: {{ patient.first_name }} <br>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

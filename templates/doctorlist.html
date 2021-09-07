@@ -1,0 +1,45 @@
+{% extends 'newbase.html' %}
+{% load widget_tweaks %}
+{% block stylesheet %}
+<style>
+    #makeappointmentbutton{
+      background-color: blue;
+      color:white;
+  }
+  </style>
+{% endblock %}
+{% block breadcrumb %}
+My Results
+{% endblock %}
+
+{% block content %}
+<div id="accordion" role="tablist">
+    {% for doctor in doctors %}
+
+    
+    <div class="card card-collapse">
+      <div class="card-header" role="tab" id="heading{{ forloop.counter }}">
+        <h5 class="mb-0">
+          <a class="collapsed" data-toggle="collapse" href="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+            {{ doctor.first_name }} {{ doctor.first_name }}
+            <i class="material-icons">keyboard_arrow_down</i>
+          </a>
+        </h5>
+      </div>
+      <div id="collapse{{ forloop.counter }}" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+        <div class="card-body">
+            <img src="{{ doctor.photo.url }}" alt=""> <br>  
+            Name: {{ doctor.first_name }} <br>
+            Last Name: {{ doctor.first_name }} <br>
+            Department: {{ doctor.first_name }} <br>
+            <div class="mb-4">
+                <a href="{% url 'makeanappointment' doctor.pk %}" class="btn btn-default" role="button" id="makeappointmentbutton">Make an Appointment</a>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+
+{% endblock %}
