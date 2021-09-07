@@ -2,11 +2,12 @@
 {% load widget_tweaks %}
 {% block stylesheet %}
 <style>
-    .close{
-        color: rgba(255,255,0,0.9);
+    #modalbutton{
+      color: white;
+      background-color: blue;
     }
-    .modal-dialog{
-        height: 150px;
+    .modal-lg {
+        max-width: 55% !important;
     }
 </style>
 {% endblock %}
@@ -29,8 +30,8 @@ My Results
         <tr>
             <td>{{ r.patient.first_name }}</td>
             <td>{{ r.date }}</td>
-            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Modal</button><br></td>
-            <td><a href="{% url 'display' r.pk %}" class="btn btn-secondary btn-sm" role="button">Show</a><br></td>
+            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="modalbutton" data-get-url="{% url 'getresult' r.pk %}">Show</button><br></td>
+            <!-- <td><a href="{% url 'display' r.pk %}" class="btn btn-secondary btn-sm" role="button">Show</a><br></td> -->
             <td><a href="{% url 'download' r.pk %}" class="btn btn-secondary btn-sm" role="button" download="download.dcm">Download</a><br></td>
         </tr>
         {% endif %}
@@ -42,16 +43,11 @@ My Results
 <span id="id">0</span>
 
 <!-- Modal -->
-<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" >
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
       <div class="modal-body">
-        <img src="{{ r.image.url }}" width="300px", height="100%">
+        <img src="" width="1000px", height="100%">
       </div>
     </div>
   </div>
@@ -64,6 +60,19 @@ My Results
     i=0;
     $(".ccc").on("keypress",function(){
         $("#id").text(i+=1);
+    });
+</script>
+<script>
+  $(".btn-primary").on("click", function (event) {
+        event.preventDefault();
+        $.get({
+            url: $(this).data("get-url"),
+            success: function (data) {
+                var parsed_data = JSON.parse(data)
+                $(".modal-body").html("<img src="+parsed_data.url+" width='1000px', height='100%''>")
+                $("#exampleModal").modal("show")
+            }
+        });
     });
 </script>
 {% endblock %}

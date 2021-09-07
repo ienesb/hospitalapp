@@ -21,12 +21,12 @@ class Patient(models.Model):
 
 class Doctor(models.Model):
     DEPARTMENTS = (
-        (1,'Cardiologist'),
-        (2,'Dermatologists'),
-        (3,'Emergency Medicine Specialists'),
-        (4,'Allergists/Immunologists'),
-        (5,'Anesthesiologists'),
-        (6,'Colon and Rectal Surgeons'),
+        ('Cardiologist', 'Cardiologist'),
+        ('Dermatologists', 'Dermatologists'),
+        ('Emergency Medicine Specialists', 'Emergency Medicine Specialists'),
+        ('Allergists/Immunologists', 'Allergists/Immunologists'),
+        ('Anesthesiologists', 'Anesthesiologists'),
+        ('Colon and Rectal Surgeons', 'Colon and Rectal Surgeons'),
         
     )
     
@@ -34,6 +34,7 @@ class Doctor(models.Model):
     last_name = models.CharField(max_length=50)
     department = models.CharField(max_length=50, choices=DEPARTMENTS)
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    photo = models.ImageField(upload_to="doctorpictures", null=True)
 
     def get_name(self):
         return f"{self.first_name} {self.last_name}"

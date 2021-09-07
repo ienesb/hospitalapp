@@ -53,11 +53,14 @@ class Appointments(View):
 
 @method_decorator(login_required, name='dispatch')
 class NewAppointment(View):
-    def get(self, request):
+    def get(self, request, pk=None):
         if not hasattr(request.user,"patient"):
             raise Http404("an error")
-
-        form = NewAppointmentForm()
+        if pk:
+            doctor = Doctor.objects.get(pk=pk)
+            form = NewAppointmentForm(initial={"department": doctor.department ,"doctor": doctor})
+        else:
+            form = NewAppointmentForm()
         return render(request, "newappointment.html", {"form": form})
 
     def post(self, request):
@@ -81,6 +84,9 @@ class Records(View):
         records = models.Record.objects.all().order_by("date")[::-1]
         return render(request, "records.html", {"records": records})
 
+def addrating(request):
+    j = json.dumps({"date": 1})
+    return HttpResponse(j)
 
 def get_record_from_pk(request, pk):
     record = get_object_or_404(models.Record, pk=pk)
@@ -96,9 +102,15 @@ def get_record_from_pk(request, pk):
 class MyResults(View):
     def get(self, request):
         results = models.Result.objects.all()
-        r = models.Result.objects.get(pk=6)
-        return render(request, "myresults.html", {"results": results, "r":r})
+        return render(request, "myresults.html", {"results": results})
 
+def getresult(request, pk):
+    print("ol iz well")
+    result = Result.objects.get(pk=pk)
+    url = result.image.url
+    j = json.dumps({"url": url})
+    return HttpResponse(j)
+    
 
 def download(request, pk):
     result = models.Result.objects.get(pk=pk)
@@ -177,3 +189,22 @@ class MyAccount(View):
             return redirect("newhome")
         print("form is not valid")
         return redirect("myaccount")
+
+class DoctorList(View):
+    def get(self, request):
+        doctors = Doctor.objects.all()
+        return render(request, "doctorlist.html", {"doctors": doctors})
+
+
+class MyPatientList(View):
+    def get(self, request):
+        if not hasattr(request.user, "doctor"):
+            raise Http404("you are not a doctor")
+        appointments = Appointment.objects.filter(doctor = request.user.doctor)
+        patients = []
+        for a in appointments:
+            p = a.patient
+            if not p in patients:
+                patients.append(p)
+
+        return render(request, "mypatientlist.html", {"patients": patients})
