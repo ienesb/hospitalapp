@@ -3,17 +3,6 @@
 {% load tags %}
 
 {% block stylesheet %}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-    crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-    crossorigin="anonymous"></script>
 
 <!-- Font Awesome -->
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
@@ -65,6 +54,7 @@ Appointments
             <td>{{ a.date }}</td>
             <td>{{ a.doctor.get_name }}</td>
             <td>{{ a.is_active }}</td>
+            <td><a href="#" class="btn btn-danger" role="button" data-get-url="{% url 'removeappointment' a.pk%}">Remove</a></td>
         </tr>      
         {% endfor %}
     </tbody>
@@ -109,4 +99,46 @@ Appointments
     </ul>
   </nav>
 {% endif %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-body">
+              <h4>Are you sure?</h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="modal-remove-button" class="btn btn-secondary"
+                data-dismiss="modal">Yes</button>
+            <button type="button" id="modal-close-button" class="btn btn-secondary"
+                data-dismiss="modal">No</button>
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+{{ block.super }}
+<script>
+    removelink = "#";
+    $(".btn-danger").on("click", function (event) {
+        event.preventDefault();
+        $("#exampleModal").modal("show");
+        removelink = $(this).data("get-url");
+    });
+    $("#modal-close-button").on("click", function (event) {
+        $("#exampleModal").modal("hide");
+    });
+    $("#modal-remove-button").on("click", function (event) {
+        console.log(removelink);
+        $.get({
+            url: removelink,
+            success: function(event){
+                location.reload();
+            }
+        });
+        $("#exampleModal").modal("hide");
+    });
+</script>
 {% endblock %}

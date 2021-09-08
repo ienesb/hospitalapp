@@ -51,6 +51,13 @@ class Appointments(View):
 
         return render(request, "appointments.html", {"appointments": appointments})
 
+def removeappointment(request, pk):
+    if not hasattr(request.user, "patient"):
+        raise Http404("an error")
+    models.Appointment.objects.get(pk=pk).delete()
+    return HttpResponse("success")
+
+
 @method_decorator(login_required, name='dispatch')
 class NewAppointment(View):
     def get(self, request, pk=None):
