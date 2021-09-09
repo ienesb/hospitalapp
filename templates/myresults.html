@@ -30,17 +30,17 @@ My Results
         <tr>
             <td>{{ r.patient.first_name }}</td>
             <td>{{ r.date }}</td>
+            <td><a href="{% url 'editresult' r.pk %}" class="btn btn-success" role="button">Edit</button><br></td>
             <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="modalbutton" data-get-url="{% url 'getresult' r.pk %}">Show</button><br></td>
-            <!-- <td><a href="{% url 'display' r.pk %}" class="btn btn-secondary btn-sm" role="button">Show</a><br></td> -->
             <td><a href="{% url 'download' r.pk %}" class="btn btn-secondary btn-sm" role="button" download="download.dcm">Download</a><br></td>
         </tr>
         {% endif %}
         {% endfor %}
     </tbody>
 </table>
-<input type="text" id="aaa" class="ccc"><br>
+<!-- <input type="text" id="aaa" class="ccc"><br>
 <input type="text" id="bbb" class="cccc"><br>
-<span id="id">0</span>
+<span id="id">0</span> -->
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

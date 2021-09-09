@@ -17,6 +17,7 @@ urlpatterns = [
     path("myresults", views.MyResults.as_view(), name="myresults"),
     path("download/<int:pk>", views.download, name="download"),
     path("upload", views.Upload.as_view(), name="upload"),
+    path("editresult/<int:pk>", views.EditResult.as_view(), name="editresult"),
     path("display/<int:pk>", views.DisplayResult.as_view(), name="display"),
     path("myaccount", views.MyAccount.as_view(), name="myaccount"),
     path("doctorlist", views.DoctorList.as_view(), name="doctorlist"),

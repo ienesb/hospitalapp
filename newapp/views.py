@@ -193,6 +193,33 @@ class Upload(View):
         print("form is not valid")
         return redirect("upload")
 
+
+class EditResult(View):
+    def get(self, request, pk):
+        if not hasattr(request.user, "doctor"):
+            raise Http404("an error")
+        result = Result.objects.get(pk=pk)
+        form = UploadForm(initial={"patient": result.patient, "image": result.image})
+        return render(request, "upload.html", {"form": form})
+    
+    def post(self, request, pk):
+        form = UploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            result = Result.objects.get(pk=pk)
+            doctor = result.uploaded_by
+            date = result.date
+            result.delete()
+
+            result = form.save(commit=False)
+            result.uploaded_by = request.user.doctor
+            result.date = date
+            result.save()
+
+            return redirect("myresults")
+        print("form is not valid")
+        return redirect(f"editresult/{pk}")
+        
+
 class DisplayResult(View):
     def get(self, request, pk):
         result = Result.objects.get(pk=pk)
