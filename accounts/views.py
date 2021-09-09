@@ -12,7 +12,9 @@ def signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            patient = Patient(user=user)
+            first_name = form.cleaned_data.get('first_name') 
+            last_name = form.cleaned_data.get('last_name')
+            patient = Patient(user=user, first_name=first_name, last_name=last_name)
             patient.save()
             auth_login(request, user)
             return redirect("newhome")

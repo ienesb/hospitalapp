@@ -10,7 +10,6 @@ class Patient(models.Model):
     last_name = models.CharField(max_length=50, default="PatientLastName")
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     photo = models.ImageField(upload_to="pictures", null=True)
-    date_of_birth = models.DateField(null=True)
     
     def get_name(self):
         return f"{self.first_name} {self.last_name}"
