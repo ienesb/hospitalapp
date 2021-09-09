@@ -26,9 +26,16 @@ class Home(View):
             qset = models.Appointment.objects.filter(doctor=request.user.doctor).order_by("-date")
         else:
             qset = models.Appointment.objects.filter(patient=request.user.patient).order_by("-date")
-        if len(qset) > 5:
-            qset = qset[:5]
-        return render(request, "newhome.html", {"appointments": qset})
+        
+        appointments = []
+        for i,q in enumerate(qset):
+            if not q.is_active() == "Active":
+                break
+            appointments.append(q)
+
+        if len(appointments) > 5:
+            appointments = appointments[:5]
+        return render(request, "newhome.html", {"appointments": appointments[::-1], "length": len(qset)})
 
 @method_decorator(login_required, name='dispatch')
 class Appointments(View):

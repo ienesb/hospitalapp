@@ -6,3 +6,4 @@ python-decouple
 requests
 mysqlclient>=2.0
 Pillow==5.1.0
+django_cleanup
