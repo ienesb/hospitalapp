@@ -41,21 +41,32 @@ Appointments
 <table class="table">
     <thead>
         <tr>
-            <th>Session</th>
-            <th>Date</th>
+            {%if user|has_attr:'patient' %}         
             <th>Doctor</th>
+            {% else %}
+            <th>Patient</th>
+            {% endif %}
+            <th>Date</th>
+            <th>Session</th>
             <th>Active?</th>
         </tr>
     </thead>
     <tbody>
         {% for a in appointments %} 
         <tr>
-            <td>{{ a.session }}</td>
-            <td>{{ a.date }}</td>
+            {%if user|has_attr:'patient' %} 
             <td>{{ a.doctor.get_name }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.session }}</td>
             <td>{{ a.is_active }}</td>
             <td><a href="{% url 'editappointment' a.pk %}" class="btn btn-success" role="button" data-get-url="#">Edit</a></td>
             <td><a href="#" class="btn btn-danger" role="button" data-get-url="{% url 'removeappointment' a.pk%}">Remove</a></td>
+            {% else %}
+            <td>{{ a.patient.get_name }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.session }}</td>
+            <td>{{ a.is_active }}</td>
+            {% endif %}
         </tr>      
         {% endfor %}
     </tbody>

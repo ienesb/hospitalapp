@@ -38,27 +38,40 @@
           <h4 class="card-title"><a href="{% url 'appointments' %}">Appointments</a></h4>
         </div>
         <div class="card-body">
+            {% if length == 0 %}
+            <h8>You have no active appointments. 
+              {% if user|has_attr:'patient' %}
+              <a href="{% url 'newappointment' %}">Make appointment</a></h8>
+              {% endif %}
+            {% else %}
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Patient</th>
+                    <tr>        
+                        {% if user|has_attr:'patient' %}
+                        <th>Doctor Name</th>
+                        {% else %}
+                        <th>Patient Name</th>
+                        {% endif %}
                         <th>Date</th>
-                        <th>Doctor</th>
-                        <th>Active?</th>
+                        <th>Session</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for a in appointments %}
-                    <tr>
-                        <td>{{ a.patient }}</td>
-                        <td>{{ a.date }}</td>
+                    <tr>       
+                        {% if user|has_attr:'patient' %}
                         <td>{{ a.doctor.get_name }}</td>
-                        <td>{{ a.is_active }}</td>
+                        {% else %}
+                        <td>{{ a.patient.get_name }}</td>
+                        {% endif %}
+                        <td>{{ a.date }}</td>
+                        <td>{{ a.session }}</td>
                     </tr> 
                     {% endfor %}
                           
                 </tbody>
             </table>
+            {% endif %}
         </div>
       </div>
     </div>

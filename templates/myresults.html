@@ -1,5 +1,6 @@
 {% extends 'newbase.html' %}
 {% load widget_tweaks %}
+{% load tags %}
 {% block stylesheet %}
 <style>
     #modalbutton{
@@ -12,7 +13,7 @@
 </style>
 {% endblock %}
 {% block breadcrumb %}
-My Results
+Results
 {% endblock %}
 
 {% block content %}
@@ -20,7 +21,7 @@ My Results
 <table class="table">
     <thead>
         <tr>
-            <th>Results</th>
+            <th>Patient Name</th>
             <th>Date</th>
         </tr>
     </thead>
@@ -28,9 +29,11 @@ My Results
         {% for r in results %}
         {% if r.patient == user.patient or r.uploaded_by == user.doctor%}
         <tr>
-            <td>{{ r.patient.first_name }}</td>
+            <td>{{ r.patient.first_name }} {{ r.patient.last_name }}</td>
             <td>{{ r.date }}</td>
+            {% if user|has_attr:'doctor' %} 
             <td><a href="{% url 'editresult' r.pk %}" class="btn btn-success" role="button">Edit</button><br></td>
+            {% endif %}
             <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="modalbutton" data-get-url="{% url 'getresult' r.pk %}">Show</button><br></td>
             <td><a href="{% url 'download' r.pk %}" class="btn btn-secondary btn-sm" role="button" download="download.dcm">Download</a><br></td>
         </tr>
