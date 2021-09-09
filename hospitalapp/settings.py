@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'accounts',
     'newapp',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
