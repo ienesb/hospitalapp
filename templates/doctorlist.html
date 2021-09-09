@@ -1,5 +1,6 @@
 {% extends 'newbase.html' %}
 {% load widget_tweaks %}
+{% load tags %}
 {% block stylesheet %}
 <style>
     #makeappointmentbutton{
@@ -32,9 +33,11 @@ My Results
             Name: {{ doctor.first_name }} <br>
             Last Name: {{ doctor.first_name }} <br>
             Department: {{ doctor.first_name }} <br>
+            {% if user|has_attr:'patient' %} 
             <div class="mb-4">
                 <a href="{% url 'makeanappointment' doctor.pk %}" class="btn btn-default" role="button" id="makeappointmentbutton">Make an Appointment</a>
             </div>
+            {% endif %}
         </div>
       </div>
     </div>
