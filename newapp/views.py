@@ -77,13 +77,43 @@ class NewAppointment(View):
             appointment.patient = request.user.patient
             appointment.date = form.cleaned_data.get('date')
             appointment.save()
-            return redirect("newhome")
+            return redirect("appointments")
         print("form is not valid")
         return redirect("newappointment")
 
 def getdep(request, pk):
     j = json.dumps({"dep": Doctor.objects.get(pk=pk).department, "pk": pk})
     return HttpResponse(j)
+
+
+class EditAppointment(View):
+    def get(self, request, pk):
+        if not hasattr(request.user,"patient"):
+            raise Http404("an error")
+        
+        appointment = Appointment.objects.get(pk=pk)
+        doctor = appointment.doctor
+        department = doctor.department
+        dt = appointment.date
+        session = appointment.session
+        date = datetime.datetime.strftime(dt, "%m/%d/%Y")
+        form = NewAppointmentForm(initial={"department": doctor.department ,"doctor": doctor, "date": date, "session": session})
+        
+        return render(request, "editappointment.html", {"form": form})
+    
+    def post(self, request, pk):
+        form = NewAppointmentForm(request.POST)
+        if form.is_valid():
+            appointment = Appointment.objects.filter(pk=pk)
+            doctor = form.cleaned_data.get('doctor')
+            date = form.cleaned_data.get('date')
+            session = form.cleaned_data.get('session')
+            appointment.update(doctor=doctor, date=date, session=session)
+            appointment[0].save()
+            return redirect("appointments")
+        print("form is not valid")
+        return redirect(f"editappointment/{pk}")
+    
 
 @method_decorator(login_required, name='dispatch') # https://docs.djangoproject.com/en/3.2/topics/class-based-views/mixins/
 class Records(View):

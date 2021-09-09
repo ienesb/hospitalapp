@@ -41,7 +41,7 @@ Appointments
 <table class="table">
     <thead>
         <tr>
-            <th>Patient</th>
+            <th>Session</th>
             <th>Date</th>
             <th>Doctor</th>
             <th>Active?</th>
@@ -50,10 +50,11 @@ Appointments
     <tbody>
         {% for a in appointments %} 
         <tr>
-            <td>{{ a.patient }}</td>
+            <td>{{ a.session }}</td>
             <td>{{ a.date }}</td>
             <td>{{ a.doctor.get_name }}</td>
             <td>{{ a.is_active }}</td>
+            <td><a href="{% url 'editappointment' a.pk %}" class="btn btn-success" role="button" data-get-url="#">Edit</a></td>
             <td><a href="#" class="btn btn-danger" role="button" data-get-url="{% url 'removeappointment' a.pk%}">Remove</a></td>
         </tr>      
         {% endfor %}
