@@ -37,6 +37,7 @@ class Home(View):
             appointments = appointments[:5]
         return render(request, "newhome.html", {"appointments": appointments[::-1], "length": len(qset)})
 
+
 @method_decorator(login_required, name='dispatch')
 class Appointments(View):
     def get(self, request):
@@ -58,6 +59,7 @@ class Appointments(View):
 
         return render(request, "appointments.html", {"appointments": appointments})
 
+
 def removeappointment(request, pk):
     if not hasattr(request.user, "patient"):
         raise Http404("an error")
@@ -77,7 +79,7 @@ class NewAppointment(View):
             form = NewAppointmentForm()
         return render(request, "newappointment.html", {"form": form})
 
-    def post(self, request):
+    def post(self, request, pk=None):
         form = NewAppointmentForm(request.POST)
         if form.is_valid():
             appointment = form.save(commit=False)
@@ -88,11 +90,13 @@ class NewAppointment(View):
         print("form is not valid")
         return redirect("newappointment")
 
+
 def getdep(request, pk):
     j = json.dumps({"dep": Doctor.objects.get(pk=pk).department, "pk": pk})
     return HttpResponse(j)
 
 
+@method_decorator(login_required, name='dispatch')
 class EditAppointment(View):
     def get(self, request, pk):
         if not hasattr(request.user,"patient"):
@@ -128,9 +132,11 @@ class Records(View):
         records = models.Record.objects.all().order_by("date")[::-1]
         return render(request, "records.html", {"records": records})
 
+
 def addrating(request):
     j = json.dumps({"date": 1})
     return HttpResponse(j)
+
 
 def get_record_from_pk(request, pk):
     record = get_object_or_404(models.Record, pk=pk)
@@ -142,11 +148,13 @@ def get_record_from_pk(request, pk):
                    "doctor_name": doctor_name, "dep": dep, "date": date})
     return HttpResponse(j)
 
+
 @method_decorator(login_required, name='dispatch')
 class MyResults(View):
     def get(self, request):
         results = models.Result.objects.all()
         return render(request, "myresults.html", {"results": results})
+
 
 def getresult(request, pk):
     print("ol iz well")
@@ -182,11 +190,17 @@ def download(request, pk):
         else:
             raise Http404("an error")
 
+
+@method_decorator(login_required, name='dispatch')
 class Upload(View):
-    def get(self, request):
+    def get(self, request, pk=0):
         if not hasattr(request.user, "doctor"):
             raise Http404("an error")
-        form = UploadForm()
+        if pk:
+            patient = Patient.objects.get(pk=pk)
+            form = UploadForm(initial={"patient": patient})
+        else:
+            form = UploadForm()
         return render(request, "upload.html", {"form": form})
     
     def post(self, request):
@@ -201,6 +215,7 @@ class Upload(View):
         return redirect("upload")
 
 
+@method_decorator(login_required, name='dispatch')
 class EditResult(View):
     def get(self, request, pk):
         if not hasattr(request.user, "doctor"):
@@ -227,46 +242,78 @@ class EditResult(View):
         return redirect(f"editresult/{pk}")
         
 
+@method_decorator(login_required, name='dispatch')
 class DisplayResult(View):
     def get(self, request, pk):
         result = Result.objects.get(pk=pk)
         return render(request, "display.html", {"result": result})
 
+
+@method_decorator(login_required, name='dispatch')
 class MyAccount(View):
     def get(self, request):
-        initialValues={
-        'first_name':request.user.patient.first_name,
-        'last_name':request.user.patient.first_name,
-        'photo': request.user.patient.photo,
-        'email': request.user.email
-        }
-        form = MyAccountForm(request.user, initial=initialValues)
+        if hasattr(request.user, "patient"):
+            initialValues={
+            'first_name':request.user.patient.first_name,
+            'last_name':request.user.patient.last_name,
+            'photo': request.user.patient.photo,
+            'email': request.user.email
+            }
+            form = MyAccountPatientForm(request.user, initial=initialValues)
+        else:
+            initialValues={
+            'first_name':request.user.doctor.first_name,
+            'last_name':request.user.doctor.last_name,
+            'photo': request.user.doctor.photo,
+            'email': request.doctor.email
+            }
+            form = MyAccountDoctorForm(request.user, initial=initialValues)
+        
         return render(request, "myaccount.html", {"form": form})
 
     def post(self, request):
-        
-        initialValues={
-        'first_name':request.user.patient.first_name,
-        'last_name':request.user.patient.first_name,
-        'photo': request.user.patient.photo,
-        'email': request.user.email
-        }
-        form = MyAccountForm(request.user, request.POST, request.FILES, initial=initialValues)
-        if form.is_valid():
-            request.user.patient = form.save(commit=False)
-            request.user.patient.save()
-            request.user.email = form.cleaned_data["email"]
-            request.user.save()
-            return redirect("newhome")
+        if hasattr(request.user, "patient"):
+            initialValues={
+            'first_name':request.user.patient.first_name,
+            'last_name':request.user.patient.first_name,
+            'photo': request.user.patient.photo,
+            'email': request.user.email
+            }
+            form = MyAccountPatientForm(request.user, request.POST, request.FILES, initial=initialValues)
+            if form.is_valid():
+                request.user.patient = form.save(commit=False)
+                request.user.patient.save()
+                request.user.email = form.cleaned_data["email"]
+                request.user.save()
+                return redirect("newhome")
+
+        else:
+            initialValues={
+            'first_name':request.user.doctor.first_name,
+            'last_name':request.user.doctor.first_name,
+            'photo': request.user.doctor.photo,
+            'email': request.user.email
+            }
+            form = MyAccountPatientForm(request.user, request.POST, request.FILES, initial=initialValues)
+            if form.is_valid():
+                request.user.doctor = form.save(commit=False)
+                request.user.doctor.save()
+                request.user.email = form.cleaned_data["email"]
+                request.user.save()
+                return redirect("newhome")
+
         print("form is not valid")
         return redirect("myaccount")
 
+
+@method_decorator(login_required, name='dispatch')
 class DoctorList(View):
     def get(self, request):
         doctors = Doctor.objects.all()
         return render(request, "doctorlist.html", {"doctors": doctors})
 
 
+@method_decorator(login_required, name='dispatch')
 class MyPatientList(View):
     def get(self, request):
         if not hasattr(request.user, "doctor"):

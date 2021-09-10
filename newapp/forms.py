@@ -21,22 +21,27 @@ class UploadForm(forms.ModelForm):
         model = Result
         fields = ["patient", "image"]
 
-class MyAccountForm(forms.ModelForm):
-    """
-    picture
-    first_name
-    last_name
-    email
-    date_of_birth
-    """
-
+class MyAccountPatientForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
-        super(MyAccountForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'] = forms.CharField(initial=user.patient.first_name)
-        self.fields['last_name'] = forms.CharField(initial=user.patient.last_name)
-        self.fields['email'] = forms.EmailField(initial=user.email)
+        super(MyAccountPatientForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'] = forms.CharField()
+        self.fields['last_name'] = forms.CharField()
+        self.fields['email'] = forms.EmailField()
         self.fields['photo'] = forms.ImageField(allow_empty_file=True, required=False)
 
     class Meta:
         model = Patient
+        fields = ["first_name", "last_name", "photo"]
+
+
+class MyAccountDoctorForm(forms.ModelForm):
+    def __init__(self, user, *args, **kwargs):
+        super(MyAccountDoctorForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'] = forms.CharField()
+        self.fields['last_name'] = forms.CharField()
+        self.fields['email'] = forms.EmailField()
+        self.fields['photo'] = forms.ImageField(allow_empty_file=True, required=False)
+
+    class Meta:
+        model = Doctor
         fields = ["first_name", "last_name", "photo"]
