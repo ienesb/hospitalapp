@@ -1,21 +1,40 @@
 {% extends 'newbase.html' %}
 {% load widget_tweaks %}
+{% load tags %}
 
 {% block breadcrumb %}
 My Results
 {% endblock %}
 
 {% block content %}
+<div id="accordion" role="tablist">
+  {% for patient in patients %}
 
-
-{% for patient in patients %}
-<div class="card">
-    <div class="card-body">
-        <img src="{{ patient.photo.url }}" width="100px", height="100%" alt=""> <br>  
-        Name: {{ patient.first_name }} <br>
-        Last Name: {{ patient.first_name }} <br>
-        Department: {{ patient.first_name }} <br>
+  
+  <div class="card card-collapse">
+    <div class="card-header" role="tab" id="heading{{ forloop.counter }}">
+      <h5 class="mb-0">
+        <a class="collapsed" data-toggle="collapse" href="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+          {{ patient.first_name }} {{ patient.last_name }}
+          <i class="material-icons">keyboard_arrow_down</i>
+        </a>
+      </h5>
+    </div>
+    <div id="collapse{{ forloop.counter }}" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+          <img src="{{ patient.photo.url }}" width="100px", height="100%" alt=""> <br>  
+          Name: {{ patient.first_name }} <br>
+          Last Name: {{ patient.last_name }} <br>
+          {% if user|has_attr:'doctor' %} 
+          <div class="mb-4">
+              <a href="{% url 'uploadpk' patient.pk %}" class="btn btn-default" role="button" id="uploadresultbutton">Upload Result</a>
+          </div>
+          {% endif %}
+      </div>
     </div>
   </div>
-{% endfor %}
+
+  {% endfor %}
+</div>
+
 {% endblock %}

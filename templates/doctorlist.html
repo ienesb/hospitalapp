@@ -22,7 +22,7 @@ My Results
       <div class="card-header" role="tab" id="heading{{ forloop.counter }}">
         <h5 class="mb-0">
           <a class="collapsed" data-toggle="collapse" href="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
-            {{ doctor.first_name }} {{ doctor.first_name }}
+            {{ doctor.first_name }} {{ doctor.last_name }}
             <i class="material-icons">keyboard_arrow_down</i>
           </a>
         </h5>
@@ -31,8 +31,8 @@ My Results
         <div class="card-body">
             <img src="{{ doctor.photo.url }}" width="100px", height="100%" alt=""> <br>  
             Name: {{ doctor.first_name }} <br>
-            Last Name: {{ doctor.first_name }} <br>
-            Department: {{ doctor.first_name }} <br>
+            Last Name: {{ doctor.last_name }} <br>
+            Department: {{ doctor.department }} <br>
             {% if user|has_attr:'patient' %} 
             <div class="mb-4">
                 <a href="{% url 'makeanappointment' doctor.pk %}" class="btn btn-default" role="button" id="makeappointmentbutton">Make an Appointment</a>
